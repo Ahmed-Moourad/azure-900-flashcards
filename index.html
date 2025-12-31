@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AZ-900 Complete Flashcards</title>
+    <style>
+        :root {
+            --azure-blue: #008AD7;
+            --azure-dark: #005A9E;
+            --bg-color: #f0f2f5;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        h1 { color: var(--azure-dark); margin-bottom: 5px; text-align: center; }
+        p.subtitle { color: #666; margin-bottom: 30px; text-align: center; }
+
+        .card-container {
+            perspective: 1000px;
+            width: 90%;
+            max-width: 500px;
+            height: 320px; 
+            cursor: pointer;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+        }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            box-sizing: border-box;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .front { 
+            background: white; 
+            color: #333; 
+            border: 2px solid #e1e4e8; 
+        }
+        .back {
+            background: linear-gradient(135deg, var(--azure-blue), var(--azure-dark));
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+        .controls { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: white;
+            color: var(--azure-dark);
+            border: 2px solid var(--azure-dark);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        button:hover { background: var(--azure-dark); color: white; transform: translateY(-2px); }
+        button.primary { background: var(--azure-dark); color: white; }
+        
+        .progress { margin-top: 20px; color: #888; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <h1>AZ-900 Complete Deck</h1>
+    <p class="subtitle">Tap card to reveal answer</p>
+    
+    <div class="card-container" onclick="flipCard()">
+        <div class="card" id="card">
+            <div class="card-face front" id="front-text">Loading...</div>
+            <div class="card-face back" id="back-text">Loading...</div>
+        </div>
+    </div>
+
+    <div class="progress" id="progress">Card 1 of X</div>
+
+    <div class="controls">
+        <button onclick="prevCard()">← Previous</button>
+        <button class="primary" onclick="shuffleCards()">🔀 Shuffle</button>
+        <button onclick="nextCard()">Next →</button>
+    </div>
+
+    <script>
+        // Full content from your notes
+        let flashcards = [
+            // --- RESOURCE HIERARCHY ---
+            { q: "Azure Resource Hierarchy Order", a: "Management Group ➔ Subscription ➔ Resource Group ➔ Resources." },
+            { q: "Purpose of Management Groups", a: "Centralized management for access, policy, and compliance across multiple subscriptions." },
+            { q: "Can you create child Resource Groups?", a: "No. You can create child Management Groups, but Resource Groups cannot be nested." },
+            { q: "Resource Group (RG) Regionality", a: "An RG can contain resources from multiple different regions." },
+            { q: "Resource Group Inheritance Rule", a: "Permissions (RBAC) are inherited by resources in the RG, but TAGS are NOT automatically inherited." },
+            { q: "Subscription vs RG Relationship", a: "One Resource Group can be associated with ONLY one subscription at a time." },
+            { q: "Can you merge Azure Subscriptions?", a: "No. You cannot merge subscriptions, but you can move resources between them." },
+            
+            // --- DATABASES ---
+            { q: "Azure Synapse Analytics", a: "A petabyte-scale distributed data warehouse used for OLAP (Online Analytics Processing)." },
+            { q: "Azure Cosmos DB Key Features", a: "Global distribution, Schemaless, 99.999% availability, Single-digit ms response time, Automatic scaling." },
+            { q: "Azure Cosmos DB APIs", a: "Supports MongoDB (document), Cassandra (key/value), and Gremlin (graph)." },
+            { q: "Azure Cache for Redis", a: "In-memory database providing microsecond latency. Used for caching, sessions, and leaderboards." },
+            { q: "Relational vs NoSQL", a: "Relational (SQL) uses fixed schema/tables. NoSQL (Cosmos) is schemaless and scales horizontally." },
+
+            // --- NETWORKING ---
+            { q: "Azure Virtual Network (VNet) & VM Rule", a: "You must create the VM and VNet in the same Resource Group." },
+            { q: "DDoS Infrastructure Protection (Basic)", a: "Free, enabled by default, protects against common network attacks." },
+            { q: "DDoS Network Protection (Standard)", a: "Paid service. Mitigates 60+ attack types, includes analytics, and provides cost guarantees." },
+            { q: "Azure Firewall", a: "Managed, stateful service that controls ALL traffic in/out of the VNet (Centralized)." },
+            { q: "Network Security Group (NSG)", a: "Filters traffic INSIDE the VNet (subnet/NIC level) based on IP, Port, and Protocol." },
+            { q: "Difference: Azure Firewall vs WAF", a: "WAF protects only web traffic (HTTP/HTTPS). Azure Firewall protects all network traffic." },
+            { q: "VNet Peering", a: "Connects two different VNets (even in different regions) so resources can talk privately." },
+
+            // --- HYBRID CONNECTIVITY ---
+            { q: "Azure Private Link", a: "Access Azure PaaS services (like SQL/Storage) privately from your VNet using a Private Endpoint." },
+            { q: "Azure Bastion", a: "Secure RDP/SSH access to VMs via the browser without exposing public IP addresses." },
+            { q: "Azure VPN Gateway", a: "Encrypted connection between on-prem and Azure over the PUBLIC internet." },
+            { q: "Azure ExpressRoute", a: "Private physical connection to Azure. Does NOT use the internet. Faster, but NOT encrypted by default." },
+            { q: "Azure Arc", a: "Manages multi-cloud and on-premise resources (VMs, K8s, SQL) from the Azure Portal." },
+
+            // --- IDENTITY ---
+            { q: "Microsoft Entra ID (Azure AD)", a: "Cloud-based identity and access management service." },
+            { q: "Authentication (AuthN)", a: "Verifies identity: 'Is it the right user?'" },
+            { q: "Authorization (AuthZ)", a: "Verifies access: 'Do they have the right permissions?'" },
+            { q: "Key Entra ID Features", a: "MFA (Multi-Factor Auth), SSPR (Self-Service Password Reset), SSO (Single Sign-On)." },
+            { q: "RBAC (Role-Based Access Control)", a: "System used to configure Authorization (Access rights) to Azure resources." },
+            { q: "3 Parts of RBAC Role Assignment", a: "1. Security Principal (Who) \n2. Role Definition (What) \n3. Scope (Where)" },
+            { q: "Best Scope for RBAC", a: "Management Group level (because permissions inherit down to Subs and RGs)." }
+        ];
+
+        let currentIndex = 0;
+        const card = document.getElementById('card');
+        const frontText = document.getElementById('front-text');
+        const backText = document.getElementById('back-text');
+        const progressText = document.getElementById('progress');
+
+        function updateCard() {
+            card.classList.remove('flipped');
+            // Small delay to allow flip animation to reset before changing text
+            setTimeout(() => {
+                frontText.innerText = flashcards[currentIndex].q;
+                backText.innerText = flashcards[currentIndex].a;
+                progressText.innerText = `Card ${currentIndex + 1} of ${flashcards.length}`;
+            }, 150);
+        }
+
+        function flipCard() { card.classList.toggle('flipped'); }
+
+        function nextCard() {
+            currentIndex = (currentIndex + 1) % flashcards.length;
+            updateCard();
+        }
+
+        function prevCard() {
+            currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+            updateCard();
+        }
+
+        function shuffleCards() {
+            for (let i = flashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+            }
+            currentIndex = 0;
+            updateCard();
+        }
+
+        // Initialize first card
+        updateCard();
+    </script>
+</body>
+</html>
