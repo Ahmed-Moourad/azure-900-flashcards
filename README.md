@@ -1,4 +1,8 @@
-⚡ **Azure AZ-900 Core Concepts Flashcards**
+<a href="https://ahmed-moourad.github.io/azure-900-flashcards/">
+  <img width="1877" height="896" alt="image" src="https://github.com/user-attachments/assets/359e470c-7a06-41c9-8984-3a0eaf03a9ac" />
+</a>
+
+⚡**Azure AZ-900 Core Concepts Flashcards**
 
 A complete, interactive study deck built from handwritten notes covering the essential domains for the Microsoft Azure Fundamentals (AZ-900) certification exam.
 
@@ -7,6 +11,7 @@ A complete, interactive study deck built from handwritten notes covering the ess
 The flashcard application is hosted directly on GitHub Pages for easy access on any device.
 
 👉 [Launch the AZ-900 Flashcard App Here](https://ahmed-moourad.github.io/azure-900-flashcards/) 👈
+
 
 
 ✨ **Key Features**
@@ -19,75 +24,6 @@ Shuffle Function: Test your recall by shuffling the deck order with the dedicate
 
 Mobile Friendly: Fully responsive design for studying on the go.
 
-📚 **Study Summary: Core AZ-900 Concepts**
-
-This table summarizes the core services and concepts covered in the flashcard deck.
-
-Domain
-
-Concept
-
-Definition / Key Rule
-
-IDENTITY
-
-Microsoft Entra ID
-
-Cloud Identity. Features: MFA, SSPR, SSO.
-
-IDENTITY
-
-RBAC Assignment
-
-Authorization. Must specify: Who (Principal), What (Role), and Where (Scope).
-
-NETWORKING
-
-Azure Firewall
-
-Managed, Stateful service filtering all traffic; positioned outside the VNet.
-
-NETWORKING
-
-NSG (Network Security Group)
-
-Filters traffic inside the VNet at the NIC/Subnet level.
-
-NETWORKING
-
-ExpressRoute
-
-Private connection to Azure (no public internet); NOT encrypted by default.
-
-NETWORKING
-
-Private Link
-
-Access PaaS services (e.g., Storage, SQL) using Private Endpoints inside your VNet.
-
-DATABASE
-
-Azure Cosmos DB
-
-Global, schemaless NoSQL database offering $99.999\%$ availability.
-
-DATABASE
-
-Synapse Analytics
-
-Distributed data warehouse for OLAP (petabyte-scale data analysis).
-
-HIERARCHY
-
-Management Group
-
-Used for centralized policy and compliance across multiple subscriptions.
-
-HIERARCHY
-
-Resource Group Rule
-
-Can hold resources from multiple regions, but is linked to ONLY one subscription.
 
 🛠️ **Setup Instructions (For Contributors)**
 
