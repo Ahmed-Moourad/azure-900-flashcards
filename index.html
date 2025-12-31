@@ -3,194 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure AZ-900 Complete Flashcards</title>
+    <title>AZ-900 Cyber Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --azure-blue: #008AD7;
-            --azure-dark: #005A9E;
-            --bg-color: #f0f2f5;
+            --accent-green: #00ffaa;
+            --accent-red: #ff4d4d;
+            --accent-blue: #00ccff;
+            --glass: rgba(10, 11, 30, 0.75);
+            --glass-border: rgba(0, 204, 255, 0.3);
+            --text-main: #ffffff;
+            --shadow-text: 0px 2px 4px rgba(0, 0, 0, 0.8);
         }
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        h1 { color: var(--azure-dark); margin-bottom: 5px; text-align: center; }
-        p.subtitle { color: #666; margin-bottom: 30px; text-align: center; }
 
-        .card-container {
-            perspective: 1000px;
-            width: 90%;
-            max-width: 500px;
-            height: 320px; 
-            cursor: pointer;
-        }
-        .card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 20px;
-        }
-        .card.flipped { transform: rotateY(180deg); }
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 30px;
-            box-sizing: border-box;
-            border-radius: 20px;
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: 600;
-            line-height: 1.4;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('assets/background.png');
+            background-size: cover;
+            background-position: center;
         }
-        .front { 
-            background: white; 
-            color: #333; 
-            border: 2px solid #e1e4e8; 
+
+        .app-container { width: 100%; max-width: 1100px; display: flex; flex-direction: column; align-items: center; z-index: 1; }
+
+        .header h1 { 
+            font-size: 3rem; margin: 0; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 4px; text-shadow: 0 0 15px var(--accent-blue), var(--shadow-text); 
         }
-        .back {
-            background: linear-gradient(135deg, var(--azure-blue), var(--azure-dark));
-            color: white;
-            transform: rotateY(180deg);
-            font-size: 1.1rem;
-            font-weight: 400;
+        .header p { 
+            color: #d1d5db; margin: 10px 0 40px; font-size: 1rem; text-transform: uppercase; 
+            letter-spacing: 2px; text-shadow: var(--shadow-text);
         }
-        .controls { margin-top: 30px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        button {
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            background: white;
-            color: var(--azure-dark);
-            border: 2px solid var(--azure-dark);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+        .main-content { display: flex; align-items: center; justify-content: center; gap: 60px; width: 100%; }
+
+        .flashcard-wrapper { width: 650px; height: 400px; perspective: 1200px; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
+        .flashcard-inner.is-flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border); border-radius: 24px; padding: 40px; box-sizing: border-box;
+            box-shadow: 0 0 30px rgba(0, 204, 255, 0.2); text-align: center;
         }
-        button:hover { background: var(--azure-dark); color: white; transform: translateY(-2px); }
-        button.primary { background: var(--azure-dark); color: white; }
+
+        .card-back { transform: rotateY(180deg); border-color: var(--accent-green); }
+        .question-text, .answer-text { font-size: 2.4rem; font-weight: 700; line-height: 1.3; text-shadow: var(--shadow-text); }
+
+        .reveal-btn {
+            margin-top: 30px; background: rgba(0, 255, 170, 0.1); color: var(--accent-green);
+            border: 2px solid var(--accent-green); padding: 12px 35px; border-radius: 50px;
+            font-weight: 800; cursor: pointer; text-transform: uppercase;
+            transition: 0.3s; box-shadow: 0 0 10px rgba(0, 255, 170, 0.2);
+            text-shadow: var(--shadow-text);
+        }
+        .reveal-btn:hover { background: var(--accent-green); color: #000; box-shadow: 0 0 20px var(--accent-green); text-shadow: none; }
+
+        .sidebar { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .progress-ring-container { width: 130px; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; }
+        #progress-svg { transform: rotate(-90deg); }
+        .ring-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 8; }
+        .ring-known { fill: none; stroke: var(--accent-green); stroke-width: 8; stroke-linecap: round; transition: 0.5s; }
+        .ring-nope { fill: none; stroke: var(--accent-red); stroke-width: 8; stroke-linecap: round; transition: 0.5s; }
+        .progress-text { position: absolute; font-size: 1.8rem; font-weight: 800; text-shadow: var(--shadow-text); }
+
+        .stat-pills { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .stat-pill { 
+            background: rgba(0, 0, 0, 0.4); padding: 6px 15px; border-radius: 50px; 
+            display: flex; justify-content: space-between; font-size: 0.8rem; 
+            border: 1px solid rgba(255,255,255,0.1); text-shadow: var(--shadow-text);
+        }
+
+        /* Upgraded Cyber Buttons */
+        .btn-status {
+            width: 200px; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border);
+            color: #fff; font-weight: 700; background: rgba(0, 0, 0, 0.5); cursor: pointer;
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 12px;
+            text-shadow: var(--shadow-text); backdrop-filter: blur(4px);
+        }
+        .btn-status:hover:not(:disabled) { background: rgba(255, 255, 255, 0.1); border-color: white; }
         
-        .progress { margin-top: 20px; color: #888; font-weight: 500; }
+        /* Large Icon Styling */
+        .status-icon { font-size: 1.8rem; font-weight: 900; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
+        .icon-green { color: var(--accent-green); text-shadow: 0 0 10px var(--accent-green); }
+        .icon-red { color: var(--accent-red); text-shadow: 0 0 10px var(--accent-red); }
+
+        .btn-status:disabled { opacity: 0.2; cursor: not-allowed; }
+
+        .card-counter { 
+            margin-top: 30px; font-weight: 600; color: #ffffff; letter-spacing: 1.5px; 
+            background: rgba(0, 0, 0, 0.6); padding: 8px 20px; border-radius: 20px;
+            backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.1);
+            text-shadow: var(--shadow-text);
+        }
+
+        .footer-nav { margin-top: 20px; display: flex; gap: 15px; }
+        .nav-btn { 
+            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--glass-border); color: white; 
+            padding: 10px 25px; border-radius: 8px; cursor: pointer; transition: 0.2s; 
+            text-shadow: var(--shadow-text);
+        }
+        .nav-btn:hover:not(:disabled) { border-color: var(--accent-blue); box-shadow: 0 0 10px var(--accent-blue); background: rgba(0, 204, 255, 0.1); }
+        .shuffle-btn { background: var(--accent-blue); color: #000; font-weight: 800; border: none; }
+
+        #celebration-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(10px);
+        }
+        .result-box { text-align: center; padding: 40px; border-radius: 30px; border: 2px solid var(--accent-blue); box-shadow: 0 0 50px rgba(0, 204, 255, 0.3); background: rgba(10, 11, 30, 0.9); }
+        .result-title { font-size: 3.5rem; font-weight: 800; margin-bottom: 10px; text-shadow: var(--shadow-text); }
+        .result-score { font-size: 2rem; margin-bottom: 30px; text-shadow: var(--shadow-text); }
+        .restart-btn { background: var(--accent-blue); border: none; padding: 15px 40px; border-radius: 50px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .restart-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent-blue); }
     </style>
 </head>
 <body>
 
-    <h1>AZ-900 Complete Deck</h1>
-    <p class="subtitle">Tap card to reveal answer</p>
-    
-    <div class="card-container" onclick="flipCard()">
-        <div class="card" id="card">
-            <div class="card-face front" id="front-text">Loading...</div>
-            <div class="card-face back" id="back-text">Loading...</div>
+<div id="celebration-overlay">
+    <div class="result-box">
+        <div class="result-title" id="resTitle">SYSTEM CLEAR</div>
+        <div class="result-score" id="resScore">SCORE: 0/0</div>
+        <div id="resMsg" style="margin-bottom: 30px; color: #d1d5db; text-shadow: var(--shadow-text);">...</div>
+        <button class="restart-btn" onclick="shuffleCards()">Reboot Session</button>
+    </div>
+</div>
+
+<div class="app-container">
+    <div class="header">
+        <h1>Azure-900 Complete Deck</h1>
+        <p>Tap card to reveal answer</p>
+    </div>
+
+    <div class="main-content">
+        <div class="flashcard-wrapper" onclick="flipCard()">
+            <div class="flashcard-inner" id="cardInner">
+                <div class="card-face card-front">
+                    <div class="question-text" id="qText">...</div>
+                    <button class="reveal-btn">Reveal Answer</button>
+                </div>
+                <div class="card-face card-back">
+                    <div class="answer-text" id="aText">...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="progress-ring-container">
+                <svg id="progress-svg" width="130" height="130">
+                    <circle class="ring-bg" cx="65" cy="65" r="55"></circle>
+                    <circle id="nope-segment" class="ring-nope" cx="65" cy="65" r="55"></circle>
+                    <circle id="known-segment" class="ring-known" cx="65" cy="65" r="55"></circle>
+                </svg>
+                <span class="progress-text" id="scoreLabel">0/5</span>
+            </div>
+            <div class="stat-pills">
+                <div class="stat-pill"><span>KNOWN</span> <span style="color:var(--accent-green)" id="correctTally">0</span></div>
+                <div class="stat-pill"><span>NOPE</span> <span style="color:var(--accent-red)" id="wrongTally">0</span></div>
+            </div>
+            <button class="btn-status" id="btnKnown" onclick="markCard(true)">
+                <span class="status-icon icon-green">✓</span> IDENTIFIED
+            </button>
+            <button class="btn-status" id="btnNope" onclick="markCard(false)">
+                <span class="status-icon icon-red">✕</span> UNKNOWN
+            </button>
         </div>
     </div>
 
-    <div class="progress" id="progress">Card 1 of X</div>
+    <div class="card-counter" id="mainCounter">CARD 0 OF 0</div>
 
-    <div class="controls">
-        <button onclick="prevCard()">← Previous</button>
-        <button class="primary" onclick="shuffleCards()">🔀 Shuffle</button>
-        <button onclick="nextCard()">Next →</button>
+    <div class="footer-nav">
+        <button class="nav-btn" onclick="prevCard()" id="btnPrev">← BACK</button>
+        <button class="nav-btn shuffle-btn" onclick="shuffleCards()">REBOOT</button>
+        <button class="nav-btn" onclick="nextCard()" id="btnNext">NEXT →</button>
     </div>
+</div>
 
-    <script>
-        // Full content from your notes
-        let flashcards = [
-            // --- RESOURCE HIERARCHY ---
-            { q: "Azure Resource Hierarchy Order", a: "Management Group ➔ Subscription ➔ Resource Group ➔ Resources." },
-            { q: "Purpose of Management Groups", a: "Centralized management for access, policy, and compliance across multiple subscriptions." },
-            { q: "Can you create child Resource Groups?", a: "No. You can create child Management Groups, but Resource Groups cannot be nested." },
-            { q: "Resource Group (RG) Regionality", a: "An RG can contain resources from multiple different regions." },
-            { q: "Resource Group Inheritance Rule", a: "Permissions (RBAC) are inherited by resources in the RG, but TAGS are NOT automatically inherited." },
-            { q: "Subscription vs RG Relationship", a: "One Resource Group can be associated with ONLY one subscription at a time." },
-            { q: "Can you merge Azure Subscriptions?", a: "No. You cannot merge subscriptions, but you can move resources between them." },
+<script>
+    const deck = [
+        // --- RESOURCE HIERARCHY & MANAGEMENT ---
+        { q: "Azure Resource Hierarchy Order", a: "Management Group ➔ Subscription ➔ Resource Group ➔ Resources." },
+        { q: "Purpose of Management Groups", a: "Centralized management for access, policy, and compliance across multiple subscriptions." },
+        { q: "Resource Group", a: "A container that holds related resources for an Azure solution. Resources can be in different regions." },
+        { q: "Azure Subscription", a: "Links an Azure account to its resources and manages costs. One account can have multiple subscriptions." },
+        { q: "Resource Locks", a: "Prevent accidental deletion or modification of resources. Types: CanNotDelete & ReadOnly." },
+        { q: "Azure Policy", a: "Enforces rules to ensure resources are compliant with organizational standards (e.g., allowed regions or VM sizes)." },
+        { q: "Azure Blueprints", a: "A package of artifacts (Policies, Roles, Templates) to quickly setup environments adhering to standards." },
+        { q: "Azure Arc", a: "Extends Azure management to on-premises, multi-cloud, and edge environments." },
+        { q: "Tags", a: "Metadata (name-value pairs) for organizing resources. They are NOT inherited by child resources." },
+        { q: "Can you create child Resource Groups?", a: "No. You can create child Management Groups, but Resource Groups cannot be nested." },
+        { q: "Resource Group (RG) Regionality", a: "An RG can contain resources from multiple different regions." },
+        { q: "Resource Group Inheritance Rule", a: "Permissions (RBAC) are inherited by resources in the RG, but TAGS are NOT automatically inherited." },
+        { q: "Subscription vs RG Relationship", a: "One Resource Group can be associated with ONLY one subscription at a time." },
+        { q: "Can you merge Azure Subscriptions?", a: "No. You cannot merge subscriptions, but you can move resources between them." },
+        
+        // --- DATABASES ---
+        { q: "Azure Synapse Analytics", a: "A petabyte-scale distributed data warehouse used for OLAP (Online Analytics Processing)." },
+        { q: "Azure Cosmos DB Key Features", a: "Global distribution, Schemaless, 99.999% availability, Single-digit ms response time, Automatic scaling." },
+        { q: "Azure Cosmos DB APIs", a: "Supports MongoDB (document), Cassandra (key/value), and Gremlin (graph)." },
+        { q: "Azure Cache for Redis", a: "In-memory database providing microsecond latency. Used for caching, sessions, and leaderboards." },
+        { q: "Relational vs NoSQL", a: "Relational (SQL) uses fixed schema/tables. NoSQL (Cosmos) is schemaless and scales horizontally." },
+        { q: "Azure SQL Database", a: "Managed relational database (PaaS) based on Microsoft SQL Server." },
+        { q: "Database Migration Service", a: "Tool to migrate on-premises databases to Azure." },
+
+
+        // --- NETWORKING ---
+        { q: "Network Security Group (NSG)", a: "Filters traffic to/from resources inside a VNet. Attached to subnets or NICs." },
+        { q: "Azure Firewall", a: "Managed, stateful firewall service protecting VNet resources (Centralized, outside VNet)." },
+        { q: "VNet Peering", a: "Connects two VNets (same or different regions) allowing resources to talk privately." },
+        { q: "Azure ExpressRoute", a: "Private, dedicated physical connection to Azure (does not use public internet)." },
+        { q: "Azure VPN Gateway", a: "Encrypted connection between an on-premises network and Azure over the public internet (Site-to-Site or Point-to-Site)." },
+        { q: "Azure DDoS Protection", a: "Protects against Distributed Denial of Service attacks. Basic (free) and Network Protection (paid)." },
+        { q: "DDoS Infrastructure Protection (Basic)", a: "Free, enabled by default, protects against common network attacks." },
+        { q: "DDoS Network Protection (Standard)", a: "Paid service. Mitigates 60+ attack types, includes analytics, and provides cost guarantees." },
+        { q: "Azure Bastion", a: "Fully managed PaaS service that provides secure RDP and SSH access to VMs over SSL. Via the browser without exposing public IP addresses." },
+        { q: "Azure Private Link", a: "Enables access to Azure PaaS services (e.g., Storage, SQL) over a private endpoint in your VNet." },
+        { q: "Azure Front Door", a: "Global CDN and load balancing service for web content." },
+        { q: "Azure DNS", a: "Hosting service for DNS domains that provides name resolution using Microsoft Azure infrastructure." },
+        { q: "Azure Virtual Network (VNet) & VM Rule", a: "You must create the VM and VNet in the same Resource Group." },
+        { q: "Difference: Azure Firewall vs WAF", a: "WAF protects only web traffic (HTTP/HTTPS). Azure Firewall protects all network traffic." },
+        { q: "Public IP Address Billing", a: "Public IP addresses are typically charged per IP per hour." },
+
+        // --- COMPUTE SERVICES ---
+        { q: "Availability Set", a: "Logical grouping of VMs using Fault Domains (power/network) and Update Domains (reboots) to ensure availability." },
+        { q: "Azure Scale Sets", a: "Create and manage a group of load-balanced VMs that can automatically scale (optional multiple AZs)." },
+        { q: "Availability Zones (AZ)", a: "Physically separate datacenters within a region with independent power, cooling, and networking." },
+        { q: "Dedicated Hosts", a: "Physical servers dedicated to one customer, often used for compliance or licensing requirements." },
+        { q: "Azure Container Instances (ACI)", a: "PaaS offering to deploy individual containers quickly without orchestration." },
+        { q: "Azure Kubernetes Service (AKS)", a: "Managed Kubernetes service for container orchestration." },
+        { q: "Azure Functions", a: "Serverless compute service where you don't manage infrastructure, paying only for execution time." },
+        { q: "Azure Virtual Desktop", a: "Cloud-hosted Windows experience (Windows 10/11 & Server) accessible from any device with multi-session support." },
+        { q: "VM Series - B Series", a: "Burstable VMs for workloads that don't need continuous full CPU performance." },
+        { q: "VM Series - D Series", a: "General purpose VMs." },
+        { q: "VM Series - E Series", a: "VMs optimized for high memory needs." },
+        { q: "VM Series - F Series", a: "VMs optimized for compute/vector processing workloads." },
+        { q: "Azure App Services", a: "PaaS offering for hosting web applications, REST APIs, and mobile back ends." },
+
+        // --- STORAGE ---
+        { q: "LRS (Locally Redundant Storage)", a: "3 synchronous copies in a single Data Center." },
+        { q: "ZRS (Zone Redundant Storage)", a: "3 synchronous copies across 3 Availability Zones in the primary region." },
+        { q: "GRS (Geo-Redundant Storage)", a: "LRS in primary region + Asynchronous copy to a secondary region (6 copies total)." },
+        { q: "GZRS (Geo-Zone Redundant Storage)", a: "ZRS in primary region + Asynchronous copy to a secondary region." },
+        { q: "Blob Access Tiers", a: "Hot (frequent), Cool (infrequent, min 30 days), Cold (min 90 days), Archive (rare, min 180 days)." },
+        { q: "Azure Files", a: "Managed file shares for cloud or on-premises access (SMB protocol)." },
+        { q: "Azure File Sync", a: "Syncs on-premises file servers with Azure Files for flexible connectivity." },
+        { q: "AzCopy", a: "Command-line utility for copying data to/from Azure Storage." },
+        { q: "Azure Data Box", a: "Physical device to migrate huge volumes of data (40TB - 1PB) offline to Azure." },
+        { q: "Disk Storage Types", a: "Standard HDD (Backup), Standard SSD (Dev/Test), Premium SSD (Prod), Ultra SSD (IO intensive/SAP)." },
+        { q: "Storage Account Types", a: "Block Blob (Object), File (Shared), Queue (Messaging), Table (NoSQL Key-Attribute)." },
+
+
+        // --- IDENTITY & SECURITY ---
+        { q: "Microsoft Entra ID (Azure AD)", a: "Cloud-based identity and access management service." },
+        { q: "Authentication (AuthN)", a: "Verifies identity: 'Is it the right user?'" },
+        { q: "Authorization (AuthZ)", a: "Verifies access: 'Do they have the right permissions?'" },
+        { q: "Key Entra ID Features", a: "MFA (Multi-Factor Auth), SSPR (Self-Service Password Reset), SSO (Single Sign-On)." },
+        { q: "RBAC (Role-Based Access Control)", a: "System used to configure Authorization (Access rights) to Azure resources." },
+        { q: "3 Parts of RBAC Role Assignment", a: "1. Security Principal (Who) \n2. Role Definition (What) \n3. Scope (Where)" },
+        { q: "Best Scope for RBAC", a: "Management Group level (because permissions inherit down to Subs and RGs)." },
+        { q: "Multi-Factor Authentication (MFA)", a: "Requires two or more verification methods (something you know, have, or are)." },
+        { q: "Conditional Access", a: "Policies that control access based on signals (User, Location, Device)." },
+        { q: "Role-Based Access Control (RBAC)", a: "Manages who has access to Azure resources, what they can do, and where (scope)." },
+        { q: "Zero Trust Model", a: "Security strategy: Verify explicitly, Use least privileged access, Assume breach." },
+        { q: "Microsoft Defender for Cloud", a: "Provides CSPM (Security Posture) and CWP (Workload Protection) for hybrid clouds." },
+        { q: "Microsoft Sentinel", a: "Cloud-native SIEM (Security Information and Event Management) & SOAR solution." },
+        { q: "Azure Key Vault", a: "Securely stores secrets, keys, and certificates." },
+        { q: "Defense in Depth", a: "Layered approach to security (Physical, Identity, Perimeter, Network, Compute, App, Data)." },
+
+
+        // --- MONITORING, COST & DEPLOYMENT ---
+        { q: "Azure Advisor", a: "Free personalized recommendations for Cost, Security, Reliability, Operational Excellence, and Performance." },
+        { q: "Azure Monitor", a: "Collects and analyzes telemetry (Metrics & Logs) from Azure and on-premise resources." },
+        { q: "Azure Service Health", a: "Personalized dashboard notifying you about Azure service incidents and planned maintenance." },
+        { q: "TCO Calculator", a: "Estimates cost savings of migrating from on-premises to Azure (Total Cost of Ownership)." },
+        { q: "Pricing Calculator", a: "Estimates expected monthly costs for Azure services." },
+        { q: "Cost Management", a: "Tool to view costs, analyze spending, and set budget alerts." },
+        { q: "ARM Templates", a: "JSON files defining infrastructure as code (declarative syntax) for deployment." },
+        { q: "Bicep", a: "Domain Specific Language (DSL) that acts as a transparent abstraction over ARM templates (easier syntax)." },
+        { q: "DevTest Labs", a: "Service to quickly provision development and test environments with pre-configured policies." },
+        { q: "Azure DevOps", a: "Suite of tools (Boards, Repos, Pipelines, Artifacts, Test Plans) for software development." },
+
+        // --- MANAGEMENT & GOVERNANCE TOOLS ---
+        { q: "Microsoft Purview", a: "A data governance portal used to manage access to data sources and datasets via Data Policies. To manage and govern on-premises, multi-cloud, and SaaS data." },
+        { q: "Azure Service Health", a: "Provides notifications about outages, planned maintenance, and service health in specific Azure regions." },
+        { q: "Health Advisories", a: "Proactive insights provided within Service Health regarding service deprecations and recommended actions." },
+        { q: "Activity Logs", a: "Tracks 'who performed what action' on Azure resources; logs are typically kept for 90 days." },
+        { q: "Azure Tags", a: "Metadata name-value pairs used to organize resources for billing or management; they are NOT inherited by child resources." },
+        { q: "Service Trust Portal", a: "Site containing audit reports and details on how Microsoft meets compliance standards." },
+        { q: "Azure Sovereign Regions", a: "Specialized regions for specific compliance needs (e.g., Azure Government, Azure China)." },
+        { q: "Privacy Statement", a: "Explains what personal data Microsoft processes and how it is used." },
+
+
+        // --- INFRASTRUCTURE AS CODE (IaC) & DEV TOOLS ---
+        { q: "Azure Resource Manager (ARM)", a: "The deployment and management service for Azure; all resource actions go through ARM." },
+        { q: "ARM Templates", a: "JSON-based files used for declarative Infrastructure as Code (IaC) with automatic rollback on failure." },
+        { q: "Bicep", a: "A domain-specific language (DSL) that uses declarative syntax to deploy resources with less verbosity than JSON ARM templates." },
+        { q: "Azure CLI", a: "Command-line interface optimized for Bash environments to manage Azure resources." },
+        { q: "Azure Cloud Shell", a: "A browser-based shell environment for managing Azure resources without installing local tools." },
+        { q: "Azure DevTest Labs", a: "Service to quickly provision environments for demos, load testing, or app testing using ARM templates." },
+
+        // --- RECOVERY & RESILIENCE ---
+        { q: "Resilience", a: "The ability of a system to provide acceptable behavior even when one or more parts of the system fail." },
+        { q: "Azure Site Recovery", a: "A Disaster Recovery (DR) service that replicates VMs to another Azure region." },
+
+        // --- SERVICE LEVEL AGREEMENTS (SLA) ---
+        { q: "SLA (Service Level Agreement)", a: "A formal document describing Microsoft's commitment for uptime and connectivity." },
+        { q: "Calculating Composite SLA", a: "The product of individual SLAs (e.g., 99.9% x 99.9% = 99.8%)." },
+        { q: "Azure Service Lifecycle Phases", a: "Private Preview ➔ Public Preview ➔ General Availability (GA)." },
+        { q: "Public Preview Purpose", a: "Allows customers to test new features; however, these typically have no SLA guarantees." },
+
+        // --- IDENTITY & SECURITY (ENTRA ID) ---
+        { q: "Microsoft Entra ID Free vs Premium P1", a: "Free includes SSO and MFA; P1 adds Conditional Access and advanced security reports." },
+        { q: "Self-Service Password Reset (SSPR)", a: "Allows users to reset their own passwords without IT help, reducing helpdesk costs." },
+        { q: "Security Defaults", a: "A basic level of security provided by Microsoft that requires MFA for all users." },
+        { q: "Defense in Depth Layers", a: "Physical, Identity & Access, Perimeter, Network, Compute, Application, and Data." },
+
+        // --- PRACTICE EXAM SPECIFIC NOTES ---
+        { q: "Resource Group (RG) Flexibility", a: "An RG can contain resources located in many different Azure regions." },
+        { q: "Conditional Access Logic", a: "Enforces policies based on signals (User, Location, Device) to ensure only compliant devices access apps." },
+        { q: "Software as a Service (SaaS) Example", a: "Microsoft 365 (Office 365)." },
+        { q: "Platform as a Service (PaaS) Example", a: "Azure SQL Database or Azure App Services." },
+        { q: "Infrastructure as a Service (IaaS) Example", a: "Azure Virtual Machines." },
+        { q: "Microsoft Purview Data Policy", a: "Feature used to manage access to data sources and datasets via a governance portal." },
+        { q: "Health Advisories", a: "Proactive insights provided within Service Health regarding service deprecation or recommended actions." },
+        { q: "Azure Service Health", a: "The specific tool for getting notifications about outages in your specific Azure regions." },
+        { q: "Activity Logs Retention", a: "Tracks who performed actions on Azure; records are kept for 90 days." },
+        { q: "Cloud Model Examples", a: "Microsoft 365 is SaaS; Azure SQL Database is PaaS; Azure VMs are IaaS." },
+        { q: "Conditional Access Use Case", a: "Enforces a policy ensuring users can only access applications from 'compliant' devices." },
+        { q: "Resource Group Location", a: "A Resource Group can contain resources located in many different Azure regions." }
+    ];
+
+    let currentIndex = 0, known = 0, nope = 0;
+    let graded = new Set();
+    const circumference = 2 * Math.PI * 55;
+
+    function flipCard() { document.getElementById('cardInner').classList.toggle('is-flipped'); }
+
+    function updateDisplay() {
+        document.getElementById('cardInner').classList.remove('is-flipped');
+        setTimeout(() => {
+            document.getElementById('qText').innerText = deck[currentIndex].q;
+            document.getElementById('aText').innerText = deck[currentIndex].a;
+            document.getElementById('mainCounter').innerText = `CARD ${currentIndex + 1} OF ${deck.length}`;
             
-            // --- DATABASES ---
-            { q: "Azure Synapse Analytics", a: "A petabyte-scale distributed data warehouse used for OLAP (Online Analytics Processing)." },
-            { q: "Azure Cosmos DB Key Features", a: "Global distribution, Schemaless, 99.999% availability, Single-digit ms response time, Automatic scaling." },
-            { q: "Azure Cosmos DB APIs", a: "Supports MongoDB (document), Cassandra (key/value), and Gremlin (graph)." },
-            { q: "Azure Cache for Redis", a: "In-memory database providing microsecond latency. Used for caching, sessions, and leaderboards." },
-            { q: "Relational vs NoSQL", a: "Relational (SQL) uses fixed schema/tables. NoSQL (Cosmos) is schemaless and scales horizontally." },
+            const isGraded = graded.has(currentIndex);
+            document.getElementById('btnNext').disabled = !isGraded || currentIndex === deck.length - 1;
+            document.getElementById('btnPrev').disabled = currentIndex === 0;
+            document.getElementById('btnKnown').disabled = isGraded;
+            document.getElementById('btnNope').disabled = isGraded;
+            drawRing();
+        }, 150);
+    }
 
-            // --- NETWORKING ---
-            { q: "Azure Virtual Network (VNet) & VM Rule", a: "You must create the VM and VNet in the same Resource Group." },
-            { q: "DDoS Infrastructure Protection (Basic)", a: "Free, enabled by default, protects against common network attacks." },
-            { q: "DDoS Network Protection (Standard)", a: "Paid service. Mitigates 60+ attack types, includes analytics, and provides cost guarantees." },
-            { q: "Azure Firewall", a: "Managed, stateful service that controls ALL traffic in/out of the VNet (Centralized)." },
-            { q: "Network Security Group (NSG)", a: "Filters traffic INSIDE the VNet (subnet/NIC level) based on IP, Port, and Protocol." },
-            { q: "Difference: Azure Firewall vs WAF", a: "WAF protects only web traffic (HTTP/HTTPS). Azure Firewall protects all network traffic." },
-            { q: "VNet Peering", a: "Connects two different VNets (even in different regions) so resources can talk privately." },
+    function drawRing() {
+        document.getElementById('scoreLabel').innerText = `${known + nope}/${deck.length}`;
+        document.getElementById('correctTally').innerText = known;
+        document.getElementById('wrongTally').innerText = nope;
+        
+        const knownSeg = document.getElementById('known-segment'), nopeSeg = document.getElementById('nope-segment');
+        knownSeg.style.strokeDasharray = nopeSeg.style.strokeDasharray = circumference;
+        knownSeg.style.strokeDashoffset = circumference - (known / deck.length) * circumference;
+        nopeSeg.style.transform = `rotate(${(known / deck.length) * 360}deg)`;
+        nopeSeg.style.transformOrigin = "center";
+        nopeSeg.style.strokeDashoffset = circumference - (nope / deck.length) * circumference;
+    }
 
-            // --- HYBRID CONNECTIVITY ---
-            { q: "Azure Private Link", a: "Access Azure PaaS services (like SQL/Storage) privately from your VNet using a Private Endpoint." },
-            { q: "Azure Bastion", a: "Secure RDP/SSH access to VMs via the browser without exposing public IP addresses." },
-            { q: "Azure VPN Gateway", a: "Encrypted connection between on-prem and Azure over the PUBLIC internet." },
-            { q: "Azure ExpressRoute", a: "Private physical connection to Azure. Does NOT use the internet. Faster, but NOT encrypted by default." },
-            { q: "Azure Arc", a: "Manages multi-cloud and on-premise resources (VMs, K8s, SQL) from the Azure Portal." },
+    function markCard(isKnown) {
+        if (graded.has(currentIndex)) return;
+        isKnown ? known++ : nope++;
+        graded.add(currentIndex);
+        drawRing();
+        if (currentIndex < deck.length - 1) nextCard();
+        else showFinal();
+    }
 
-            // --- IDENTITY ---
-            { q: "Microsoft Entra ID (Azure AD)", a: "Cloud-based identity and access management service." },
-            { q: "Authentication (AuthN)", a: "Verifies identity: 'Is it the right user?'" },
-            { q: "Authorization (AuthZ)", a: "Verifies access: 'Do they have the right permissions?'" },
-            { q: "Key Entra ID Features", a: "MFA (Multi-Factor Auth), SSPR (Self-Service Password Reset), SSO (Single Sign-On)." },
-            { q: "RBAC (Role-Based Access Control)", a: "System used to configure Authorization (Access rights) to Azure resources." },
-            { q: "3 Parts of RBAC Role Assignment", a: "1. Security Principal (Who) \n2. Role Definition (What) \n3. Scope (Where)" },
-            { q: "Best Scope for RBAC", a: "Management Group level (because permissions inherit down to Subs and RGs)." }
-        ];
-
-        let currentIndex = 0;
-        const card = document.getElementById('card');
-        const frontText = document.getElementById('front-text');
-        const backText = document.getElementById('back-text');
-        const progressText = document.getElementById('progress');
-
-        function updateCard() {
-            card.classList.remove('flipped');
-            // Small delay to allow flip animation to reset before changing text
-            setTimeout(() => {
-                frontText.innerText = flashcards[currentIndex].q;
-                backText.innerText = flashcards[currentIndex].a;
-                progressText.innerText = `Card ${currentIndex + 1} of ${flashcards.length}`;
-            }, 150);
+    function showFinal() {
+        const percent = Math.round((known / deck.length) * 100);
+        const overlay = document.getElementById('celebration-overlay');
+        const title = document.getElementById('resTitle');
+        const msg = document.getElementById('resMsg');
+        
+        overlay.style.display = 'flex';
+        document.getElementById('resScore').innerText = `TOTAL ACCURACY: ${percent}%`;
+        
+        if (percent >= 70) {
+            title.innerText = "MISSION SUCCESS";
+            title.style.color = "var(--accent-green)";
+            msg.innerText = "Fundamental knowledge verified. You are ready for deployment.";
+        } else {
+            title.innerText = "DATA CORRUPTED";
+            title.style.color = "var(--accent-red)";
+            msg.innerText = "Insufficient accuracy detected. Recommend immediate re-training.";
         }
+    }
 
-        function flipCard() { card.classList.toggle('flipped'); }
-
-        function nextCard() {
-            currentIndex = (currentIndex + 1) % flashcards.length;
-            updateCard();
-        }
-
-        function prevCard() {
-            currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
-            updateCard();
-        }
-
-        function shuffleCards() {
-            for (let i = flashcards.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
-            }
-            currentIndex = 0;
-            updateCard();
-        }
-
-        // Initialize first card
-        updateCard();
-    </script>
+    function nextCard() { if (currentIndex < deck.length - 1) { currentIndex++; updateDisplay(); } }
+    function prevCard() { if (currentIndex > 0) { currentIndex--; updateDisplay(); } }
+    function shuffleCards() {
+        document.getElementById('celebration-overlay').style.display = 'none';
+        deck.sort(() => Math.random() - 0.5);
+        currentIndex = 0; known = 0; nope = 0; graded.clear(); updateDisplay();
+    }
+    updateDisplay();
+</script>
 </body>
 </html>
