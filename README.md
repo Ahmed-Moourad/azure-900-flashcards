@@ -100,10 +100,10 @@ A GitHub Account (for hosting via GitHub Pages).
 Local Setup
 
 Clone the repository:
-
-git clone [https://github.com/Ahmed-Moourad/az-900-flash-cards.git](https://github.com/Ahmed-Moourad/az-900-flash-cards.git)
+```sh
+git clone https://github.com/Ahmed-Moourad/az-900-flash-cards.git
 cd azure-900-flashcards
-
+```
 
 Open the file: Simply double-click the index.html file in your file explorer. It will open in your default web browser.
 
