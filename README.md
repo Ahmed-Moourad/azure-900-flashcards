@@ -6,7 +6,7 @@ A complete, interactive study deck built from handwritten notes covering the ess
 
 The flashcard application is hosted directly on GitHub Pages for easy access on any device.
 
-👉 [Launch the AZ-900 Flashcard App Here](https://ahmed-moourad.github.io/az-900-flash-cards/) 👈
+👉 [Launch the AZ-900 Flashcard App Here](https://ahmed-moourad.github.io/azure-900-flashcards/) 👈
 
 
 ✨ **Key Features**
@@ -101,7 +101,7 @@ Local Setup
 
 Clone the repository:
 ```sh
-git clone https://github.com/Ahmed-Moourad/az-900-flash-cards.git
+git clone https://github.com/Ahmed-Moourad/azure-900-flashcards.git
 cd azure-900-flashcards
 ```
 
